@@ -1,6 +1,13 @@
 .bar {
    background-color: blue;
 }
-.maincard {
-    
+.main-card {
+    width:100%
+}
+.subcards {
+    display: flex;
+    justify-content: center;
+}
+.subcity {
+    padding-top: 5%;
 }
