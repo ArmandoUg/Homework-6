@@ -4,6 +4,10 @@
 .main-card {
     width:100%
 }
+.now {
+display: flex;
+justify-content: center;
+}
 .subcards {
     display: flex;
     justify-content: center;
