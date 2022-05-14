@@ -17,10 +17,18 @@ var searchbtn = document.querySelector(".citysearch");
      })
      .then(function (apidata){
          console.log(apidata);
-         var utcdets =data.current.dt;
-         var tzoffset= data.timezone_offset;
+         var utcdets = apidata.current.dt;
+         var tzoffset= apidata.timezone_offset;
+         var date = new Date(utcdets * 1000);
+         var presentdate = new Date(utcdets * 1000).toLocaleDateString("en-US")
+         var hours = date.getHours();
+         var minutes = "0" + date.getMinutes();
+         var formattedtime= hours + `:` + minutes;
+         console.log(formattedtime);
+         console.log(presentdate);
      })
      .catch(function(err){
-         
+         console.log(err);
      })
  }
+ getWeather()
