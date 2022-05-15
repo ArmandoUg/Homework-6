@@ -1,5 +1,5 @@
 var key4api = `302b573884b541013a8536ccbbae8a5d`;
-var weatherapi = `https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid=${key4api}`;
+var weatherapi = `https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly&appid=${key4api}`;
 var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${cityname},${statecode},&limit=${limit}&appid=${key4api}`;
 var lon;
 var lat;
@@ -11,10 +11,14 @@ var searchbtn = document.querySelector(".citysearch");
 var cityname = document.querySelector(".searchname");
 var iconspot = document.getElementById("ricon");
 var adddate = document.querySelector(".insdate");
+var weekdate= document.querySelector(".weekdate")
 var stemp = document.querySelector(".temp");
-var weekreport= document.querySelector(".5day");
+// var weekreport= document.querySelector(".5day");
 var shumidity = document.getElementById("humidity");
 var wind = document.querySelector(".wind");
+var weekdtemp =document.querySelector(".weektemp");
+var weekh= document.querySelector(".weekhumidity");
+var weekw = document.querySelector(".weekwind");
 
 // var icon= document.querySelector("");
 function getWeather() {
@@ -48,17 +52,17 @@ function getWeather() {
 
             showmainforecast(presentdate, ktof, humid, windsped, icon)
 
-            for (var i = 1; i < 5; i++) {
+            for (var i= 1; i < 5; i++) {
                 var weekutc = apidata.daily[i].dt;
                 var weekr = new Date(weekutc * 1000);
                 var weekdatedata = weekr.toLocaleDateString();
                 console.log(weekdatedata);
 
                 var weekpreicon = apidata.daily[i].weather[0].icon;
-                var weekicon = `http://openweathermap.org/img/wn/${weekpreicon}@2x.png`
+                var weekicon = `http://openweathermap.org/img/wn/${weekpreicon}@1x.png`;
 
                 var weektemp = apidata.daily[i].temp.day;
-                var weekktoc = ((weektemp - 273.15) * 1.8) + 32;
+                var weekktof = ((weektemp - 273.15) * 1.8) + 32;
                 console.log(weekktof);
 
                 var weekwindsped = Math.round(apidata.daily[i].wind_speed * 10) / 10;
@@ -67,7 +71,7 @@ function getWeather() {
                 var weekhumid = Math.round(apidata.daily[i].humidity * 10) / 10;
                 console.log(weekhumid);
 
-                showweekforecast(weekdatedata, weekicon, weekktoc, weekwindsped, weekhumid)
+                showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhumid)
             }
         })
         .catch(function (err) {
@@ -82,10 +86,16 @@ function showmainforecast(presentdate, ktof, humid, windsped, icon) {
     shumidity.textContent = humid;
 }
 
-function showweekforecast(weekdatedata, weekicon, weekktoc, weekwindsped, weekhumid) {
-    $("weekreport").append(
+function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhumid) {
+    // weekdate.textContent= weekdatedata;
+    $(".5day").append(
         $(`
-        <div class="daily"`)
-    )
+        <div class="daily">
+        <p>${weekdatedata}</p
+        <img src="${weekicon}" alt= "weather forcast icon">
+        <p>${Math.ceil(weekktof)} °F</p>
+        <p>Wind Speed:<div>${weekwindsped}</div>
+        <p>Humidity:<div>${weekhumid}</div>`)
+    );
 }
 getWeather()
