@@ -8,6 +8,10 @@
 display: flex;
 justify-content: center;
 }
+.split {
+display: flex;
+align-items: flex-start;
+}
 .subcards {
     display: flex;
     justify-content: center;

@@ -36,14 +36,24 @@
       <div class="row no-gutters">
         <div class="col-12 col-md-4 citymain">
           <h3 class="now"> Today</h3>
-        </div>
-        <div class="col-12 col-md-8">
-          <div class="card-body">
-            <h5 class="searchname"></h5>
-            <p class="card-text temp"></p>
-              <p class="card-text humidity">Humidity: <div id="humidity"></div></p>
-                <p class="card-text wind">Wind Speed: <div></div></p>
-            <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+          <div class="split">
+            <p class="insdate"></p>
+            <img id="ricon" src="" alt="weather icon">
+            <div class="col-12 col-md-8">
+              <div class="card-body">
+                <h5 class="searchname"></h5>
+                <p class="card-text temp">
+                <!-- <div class="degree">°C</div> -->
+                </p>
+                <p class="card-text humiditytxt">Humidity:
+                <div id="humidity"></div>
+                </p>
+                <p class="card-text windtxt">Wind Speed:
+                <div class="wind"></div>
+                </p>
+                <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+              </div>
+            </div>
           </div>
         </div>
       </div>
