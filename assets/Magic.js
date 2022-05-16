@@ -20,6 +20,7 @@ var wind = document.querySelector(".wind");
 var weekdtemp =document.querySelector(".weektemp");
 var weekh= document.querySelector(".weekhumidity");
 var weekw = document.querySelector(".weekwind");
+var pastdis=document.getElementById("pastgoeshere");
 
 // var icon= document.querySelector("");
 function getWeather() {
@@ -124,4 +125,20 @@ searchbtn.addEventListener("click", function(event){
     var search = document.getElementById("search").value.trim();
     lookup(search);
 })
+function showpast() {
+    var past = JSON.parse(localStorage.getItem(`Namecity`));
+    
+        if (past) {
+            for (var i = 0; i < past.length; i++) {
+        var pastbtn = document.createElement(button)
+        pastdis.append(pastbtn);
+        pastbtn.setAttribute(`id`, `${Namecity[i]}`)
+        pastbtn.textContent= `${Namecity[i]}`;
+        }
+    }
+    else{
+            console.log(`No past searches found`);
+        }
+}
 getWeather()
+showpast();
