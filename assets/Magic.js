@@ -9,6 +9,7 @@ var statecode;
 var results = document.querySelector(".citymain");
 var searchbtn = document.querySelector(".citysearch");
 var cityname = document.querySelector(".searchname");
+var searchtxt= document.querySelector(".mysearch");
 var iconspot = document.getElementById("ricon");
 var adddate = document.querySelector(".insdate");
 var weekdate= document.querySelector(".weekdate")
@@ -52,14 +53,15 @@ function getWeather() {
 
             showmainforecast(presentdate, ktof, humid, windsped, icon)
 
-            for (var i= 1; i < 5; i++) {
+            for (var i= 0; i < 5; i++) {
                 var weekutc = apidata.daily[i].dt;
                 var weekr = new Date(weekutc * 1000);
                 var weekdatedata = weekr.toLocaleDateString();
                 console.log(weekdatedata);
 
                 var weekpreicon = apidata.daily[i].weather[0].icon;
-                var weekicon = `http://openweathermap.org/img/wn/${weekpreicon}@1x.png`;
+                var weekicon = `http://openweathermap.org/img/wn/${weekpreicon}@2x.png`;
+                console.log(weekicon);
 
                 var weektemp = apidata.daily[i].temp.day;
                 var weekktof = ((weektemp - 273.15) * 1.8) + 32;
@@ -98,4 +100,28 @@ function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhu
         <p>Humidity:<div>${weekhumid}</div>`)
     );
 }
+function lookup(city) {
+    if (city === ""){
+        return;
+    }
+    if (localStorage.getItem("Namecity")=== null){
+        localStorage.setItem("Namecity",`[]`);
+    }
+    var historydata= JSON.parse(localStorage.getItem('Namecity'));
+    if (historydata.indexOf(city) === -1){
+        historydata.push(city);
+        localStorage.setItem(`Namecity`,JSON.stringify(historydata));
+
+        var cityparams= `./WeatherReport.html?q=`+city;
+        location.assign(cityparams);
+    }
+}
+searchbtn.addEventListener("click", function(event){
+    if(searchtxt===""){
+        return;
+    }
+    event.preventDefault();
+    var search = document.getElementById("search").value.trim();
+    lookup(search);
+})
 getWeather()

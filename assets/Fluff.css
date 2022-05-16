@@ -8,6 +8,12 @@
 display: flex;
 justify-content: center;
 }
+.cincoday{
+    display: flex;
+}
+.daily{
+    padding: 3%;
+}
 .split {
 display: flex;
 align-items: flex-start;
