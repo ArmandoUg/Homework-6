@@ -134,8 +134,6 @@ function lookup(city) {
    
         localStorage.setItem(`Namecity`,JSON.stringify(historydata));
         geodets(search);
-        // var cityparams= `./WeatherReport.html?q=`+city;
-        // location.assign(cityparams);
 }
 
 function showpast() {
@@ -165,4 +163,4 @@ searchbtn.addEventListener("click", function(event){
 
 // geodets();
 // pullWeather();
-showpast();
+showpast()
