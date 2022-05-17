@@ -1,15 +1,15 @@
 var key4api = `302b573884b541013a8536ccbbae8a5d`;
-var weatherapi = `https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly&appid=${key4api}`;
-var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${cityname},${statecode},&limit=${limit}&appid=${key4api}`;
+
+var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${encodeURI(Namecity)}&limit=5&appid=${key4api}`;
+var weatherapi = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly&appid=${key4api}`;
 var lon;
 var lat;
-var limit;
 var statecode;
 
 var results = document.querySelector(".citymain");
 var searchbtn = document.querySelector(".citysearch");
 var cityname = document.querySelector(".searchname");
-var searchtxt= document.querySelector(".mysearch");
+var Namecity= document.querySelector(".mysearch");
 var iconspot = document.getElementById("ricon");
 var adddate = document.querySelector(".insdate");
 var weekdate= document.querySelector(".weekdate")
@@ -21,9 +21,30 @@ var weekdtemp =document.querySelector(".weektemp");
 var weekh= document.querySelector(".weekhumidity");
 var weekw = document.querySelector(".weekwind");
 var pastdis=document.getElementById("pastgoeshere");
+// var encodecity= encodeURI(searchtxt);
+
 
 // var icon= document.querySelector("");
-function getWeather() {
+function geodets(Namecity){
+    fetch(geocode)
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(geoapidata){
+        console.log(geoapidata)
+        lon = geoapidata[0].lon;
+        console.log(lon);
+        lat = geoapidata[0].lat;
+        console.log(lat);
+        cityname.textContent= Namecity;
+        pullWeather(lat,lon);
+    })
+    .catch(function (err) {
+        console.log(err);
+    })
+}
+
+function pullWeather(lat,lon) {
     fetch(weatherapi)
         .then(function (response) {
             return response.json();
@@ -31,14 +52,15 @@ function getWeather() {
         .then(function (apidata) {
             console.log(apidata);
             var utcdets = apidata.current.dt;
-            //  var tzoffset= apidata.timezone_offset;
             var date = new Date(utcdets * 1000);
             var presentdate = new Date(utcdets * 1000).toLocaleDateString("en-US")
             var hours = date.getHours();
             var minutes = "0" + date.getMinutes();
             var formattedtime = hours + `:` + minutes;
+            // if(formattedtime > 6)
             //  console.log(formattedtime);
             console.log(presentdate);
+            console.log(formattedtime);
 
             var humid = apidata.current.humidity;
             console.log(humid);
@@ -85,8 +107,8 @@ function showmainforecast(presentdate, ktof, humid, windsped, icon) {
     adddate.textContent = presentdate;
     iconspot.src = icon;
     stemp.textContent = Math.ceil(ktof) + `°F`;
-    wind.textContent = windsped;
-    shumidity.textContent = humid;
+    wind.textContent = "Wind Speed:"/n + windsped;
+    shumidity.textContent ="Humidty:"/n + humid;
 }
 
 function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhumid) {
@@ -109,22 +131,13 @@ function lookup(city) {
         localStorage.setItem("Namecity",`[]`);
     }
     var historydata= JSON.parse(localStorage.getItem('Namecity'));
-    if (historydata.indexOf(city) === -1){
-        historydata.push(city);
+   
         localStorage.setItem(`Namecity`,JSON.stringify(historydata));
-
-        var cityparams= `./WeatherReport.html?q=`+city;
-        location.assign(cityparams);
-    }
+        geodets(search);
+        // var cityparams= `./WeatherReport.html?q=`+city;
+        // location.assign(cityparams);
 }
-searchbtn.addEventListener("click", function(event){
-    if(searchtxt===""){
-        return;
-    }
-    event.preventDefault();
-    var search = document.getElementById("search").value.trim();
-    lookup(search);
-})
+
 function showpast() {
     var past = JSON.parse(localStorage.getItem(`Namecity`));
     
@@ -140,5 +153,16 @@ function showpast() {
             console.log(`No past searches found`);
         }
 }
-getWeather()
+searchbtn.addEventListener("click", function(event){
+     if(Namecity===""){
+        return;
+    }
+    event.preventDefault();
+    var search = document.getElementById("mysearch");
+    lookup(search);
+   
+})
+
+// geodets();
+// pullWeather();
 showpast();
