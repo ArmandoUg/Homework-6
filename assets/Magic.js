@@ -9,44 +9,45 @@ var statecode;
 var results = document.querySelector(".citymain");
 var searchbtn = document.querySelector(".citysearch");
 var cityname = document.querySelector(".searchname");
-var Namecity= document.getElementById("mysearch");
+var Namecity = document.getElementById("mysearch");
 var iconspot = document.getElementById("ricon");
 var adddate = document.querySelector(".insdate");
-var weekdate= document.querySelector(".weekdate")
+var weekdate = document.querySelector(".weekdate")
 var stemp = document.querySelector(".temp");
 // var weekreport= document.querySelector(".5day");
 var shumidity = document.getElementById("humidity");
 var wind = document.querySelector(".wind");
 var myuv = document.querySelector(".uv");
-var weekdtemp =document.querySelector(".weektemp");
-var weekh= document.querySelector(".weekhumidity");
+var weekdtemp = document.querySelector(".weektemp");
+var weekh = document.querySelector(".weekhumidity");
 var weekw = document.querySelector(".weekwind");
-var pastdis=document.getElementById("pastgoeshere");
+var pastdis = document.getElementById("pastgoeshere");
+var pastbtnn = document.getElementById(`historybtn`) 
 // var encodecity= encodeURI(searchtxt);
 
 
 // var icon= document.querySelector("");
-function geodets(Namecity){
+function geodets(Namecity) {
     var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${Namecity}&limit=5&appid=${key4api}`;
     fetch(geocode)
-    .then(function(response){
-        return response.json();
-    })
-    .then(function(geoapidata){
-        console.log(geoapidata)
-        lon = geoapidata[0].lon;
-        console.log(lon);
-        lat = geoapidata[0].lat;
-        console.log(lat);
-        cityname.textContent= Namecity;
-        pullWeather(lat,lon);
-    })
-    .catch(function (err) {
-        console.log(err);
-    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (geoapidata) {
+            console.log(geoapidata)
+            lon = geoapidata[0].lon;
+            console.log(lon);
+            lat = geoapidata[0].lat;
+            console.log(lat);
+            cityname.textContent = Namecity;
+            pullWeather(lat, lon);
+        })
+        .catch(function (err) {
+            console.log(err);
+        })
 }
 
-function pullWeather(lat,lon) {
+function pullWeather(lat, lon) {
     fetch(weatherapi + `lat=${lat}&lon=${lon}&exclude=hourly&appid=${key4api}`)
         .then(function (response) {
             return response.json();
@@ -59,14 +60,16 @@ function pullWeather(lat,lon) {
             var hours = date.getHours();
             var minutes = "0" + date.getMinutes();
             var formattedtime = hours + `:` + minutes;
-            if(hours > 6){
-                document.getElementById("fcard").style.backgroundImage= "url('./images/Clear Sky.jpg')";
-                document.getElementById('fcard').style.color= `black`;
+            if (hours > 6) {
+                document.getElementById("fcard").style.backgroundImage = "url('./images/Clear Sky.jpg')";
+                document.getElementById('fcard').style.color = `black`;
             };
-            if (hours > 8){
-                document.getElementById("fcard").style.backgroundImage= "url('./images/Night sky.jpg')";
-                document.getElementById('fcard').style.color= `white`;
-            };
+            if (hours > 20, hours < 5) {
+                document.getElementById("fcard").style.backgroundImage = "url('./images/Night sky.jpg')";
+                document.getElementById('fcard').style.color = `white`;
+            }; 
+           
+
             //  console.log(formattedtime);
             console.log(presentdate);
             console.log(formattedtime);
@@ -82,13 +85,14 @@ function pullWeather(lat,lon) {
 
             var windsped = Math.round(apidata.current.wind_speed * 10) / 10;
             console.log(ktof);
-            
+
             var uv = apidata.current.uvi;
-            
+
+
 
             showmainforecast(presentdate, ktof, humid, windsped, icon, uv)
             $(`.5day`).html(``);
-            for (var i= 0; i < 5; i++) {
+            for (var i = 0; i < 5; i++) {
                 var weekutc = apidata.daily[i].dt;
                 var weekr = new Date(weekutc * 1000);
                 var weekdatedata = weekr.toLocaleDateString();
@@ -115,18 +119,34 @@ function pullWeather(lat,lon) {
             console.log(err);
         })
 }
-function showmainforecast(presentdate, ktof, humid, windsped, icon) {
+function showmainforecast(presentdate, ktof, humid, windsped, icon, uv) {
     adddate.textContent = presentdate;
     iconspot.src = icon;
     stemp.textContent = Math.ceil(ktof) + `°F`;
     wind.textContent = "Wind Speed:" + ` ` + windsped + `mph`;
-    shumidity.textContent ="Humidty:" +`    `+ humid;
+    shumidity.textContent = "Humidty:" + `    ` + humid;
+    myuv.textContent = "UV Index:" + ` ` + uv;
+     if (uv >10.9) {
+        document.getElementById(`uvc`).style.color = `purple`;
+    }
+    if (uv < 11) {
+        document.getElementById(`uvc`).style.color =`red`;
+    }
+    if (uv < 7.9) {
+        document.getElementById(`uvc`).style.color = `orange`;
+    }
+    if (uv < 5.9) {
+        document.getElementById(`uvc`).style.color =`yellow`;
+    }
+     if (uv < 2.9) {
+        document.getElementById(`uvc`).style.color = `green`;
+    }
 }
 
 function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhumid) {
     // weekdate.textContent= weekdatedata;
     $(".5day").append(
-        $(`
+        $(/*html*/`
         <div class="daily">
         <p>${weekdatedata}</p>
         <img src="${weekicon}" alt= "weather forcast icon">
@@ -136,45 +156,55 @@ function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhu
     );
 }
 function lookup(city) {
-    if (city === ""){
+    if (city === "") {
         return;
     }
-    if (localStorage.getItem("Namecity")=== null){
-        localStorage.setItem("Namecity",`[]`);
-        
+    if (localStorage.getItem("Namecity") === null) {
+        localStorage.setItem("Namecity", `[]`);
+
     }
-    var historydata= JSON.parse(localStorage.getItem('Namecity'));
+    var historydata = JSON.parse(localStorage.getItem('Namecity'));
     historydata.push(city);
-        localStorage.setItem(`Namecity`,JSON.stringify(historydata));
-        geodets(city);
-        console.log(city);
+    localStorage.setItem(`Namecity`, JSON.stringify(historydata));
+    geodets(city);
+    console.log(city);
 }
 
 function showpast() {
     var past = JSON.parse(localStorage.getItem(`Namecity`));
-    
-        if (past) {
-            for (var i = 0; i < past.length; i++) {
-        var pastbtn = document.createElement(`button`)
-        pastdis.append(pastbtn);
-        pastbtn.setAttribute(`id`, `${past[i]}`)
-        pastbtn.textContent= `${past[i]}`;
+
+    if (past) {
+        for (var i = 0; i < past.length; i++) {
+            var pastbtn = document.createElement(`button`)
+            pastdis.append(pastbtn);
+            pastbtn.setAttribute(`id`, `${past[i]}`)
+            pastbtn.setAttribute(`class`,`historybtn btn-primary btn-lg`)
+            pastbtn.textContent = `${past[i]}`;
         }
     }
-    else{
-            console.log(`No past searches found`);
-        }
+    else {
+        console.log(`No past searches found`);
+    }
 }
-searchbtn.addEventListener("click", function(event){
-     if(Namecity===""){
+searchbtn.addEventListener("click", function (event) {
+    if (Namecity === "") {
         return;
     }
     event.preventDefault();
     var search = document.getElementById("search").value;
     lookup(search);
-   showpast();
+    showpast();
 })
+
+for(var k = 0; k < pastbtnn.length; k++) {
+    pastbtnn[k].addEventListener("click", function (event) {
+    event.preventDefault();
+    var pastsearch = document.getElementById("search").value;
+    lookup(pastsearch);
+    showpast();
+})
+}
 
 // geodets();
 // pullWeather();
-showpast()
+// showpast()
