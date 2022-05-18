@@ -1,7 +1,7 @@
 var key4api = `302b573884b541013a8536ccbbae8a5d`;
 
-var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${encodeURI(Namecity)}&limit=5&appid=${key4api}`;
-var weatherapi = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly&appid=${key4api}`;
+var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=london&limit=5&appid=${key4api}`;
+var weatherapi = `https://api.openweathermap.org/data/2.5/onecall?`;
 var lon;
 var lat;
 var statecode;
@@ -9,7 +9,7 @@ var statecode;
 var results = document.querySelector(".citymain");
 var searchbtn = document.querySelector(".citysearch");
 var cityname = document.querySelector(".searchname");
-var Namecity= document.querySelector(".mysearch");
+var Namecity= document.getElementById("mysearch");
 var iconspot = document.getElementById("ricon");
 var adddate = document.querySelector(".insdate");
 var weekdate= document.querySelector(".weekdate")
@@ -45,7 +45,7 @@ function geodets(Namecity){
 }
 
 function pullWeather(lat,lon) {
-    fetch(weatherapi)
+    fetch(weatherapi + `lat=${lat}&lon=${lon}&exclude=hourly&appid=${key4api}`)
         .then(function (response) {
             return response.json();
         })
@@ -57,7 +57,14 @@ function pullWeather(lat,lon) {
             var hours = date.getHours();
             var minutes = "0" + date.getMinutes();
             var formattedtime = hours + `:` + minutes;
-            // if(formattedtime > 6)
+            if(hours > 6){
+                document.getElementById("fcard").style.backgroundImage= "url('./images/Clear Sky.jpg')";
+                document.getElementById('fcard').style.color= `black`;
+            };
+            if (hours > 8){
+                document.getElementById("fcard").style.backgroundImage= "url('./images/Night sky.jpg')";
+                document.getElementById('fcard').style.color= `white`;
+            };
             //  console.log(formattedtime);
             console.log(presentdate);
             console.log(formattedtime);
@@ -73,6 +80,8 @@ function pullWeather(lat,lon) {
 
             var windsped = Math.round(apidata.current.wind_speed * 10) / 10;
             console.log(ktof);
+            
+            
 
             showmainforecast(presentdate, ktof, humid, windsped, icon)
 
@@ -107,8 +116,8 @@ function showmainforecast(presentdate, ktof, humid, windsped, icon) {
     adddate.textContent = presentdate;
     iconspot.src = icon;
     stemp.textContent = Math.ceil(ktof) + `°F`;
-    wind.textContent = "Wind Speed:"/n + windsped;
-    shumidity.textContent ="Humidty:"/n + humid;
+    wind.textContent = "Wind Speed:" + ` ` + windsped;
+    shumidity.textContent ="Humidty:" +`    `+ humid;
 }
 
 function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhumid) {
@@ -119,8 +128,8 @@ function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhu
         <p>${weekdatedata}</p
         <img src="${weekicon}" alt= "weather forcast icon">
         <p>${Math.ceil(weekktof)} °F</p>
-        <p>Wind Speed:<div>${weekwindsped}</div>
-        <p>Humidity:<div>${weekhumid}</div>`)
+        <p>Wind Speed: ${weekwindsped}</p>
+        <p>Humidity: ${weekhumid}</p>`)
     );
 }
 function lookup(city) {
@@ -158,7 +167,7 @@ searchbtn.addEventListener("click", function(event){
     event.preventDefault();
     var search = document.getElementById("mysearch");
     lookup(search);
-   
+   showpast();
 })
 
 // geodets();
