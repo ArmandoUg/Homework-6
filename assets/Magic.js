@@ -1,6 +1,6 @@
 var key4api = `302b573884b541013a8536ccbbae8a5d`;
 
-var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=london&limit=5&appid=${key4api}`;
+
 var weatherapi = `https://api.openweathermap.org/data/2.5/onecall?`;
 var lon;
 var lat;
@@ -17,6 +17,7 @@ var stemp = document.querySelector(".temp");
 // var weekreport= document.querySelector(".5day");
 var shumidity = document.getElementById("humidity");
 var wind = document.querySelector(".wind");
+var myuv = document.querySelector(".uv");
 var weekdtemp =document.querySelector(".weektemp");
 var weekh= document.querySelector(".weekhumidity");
 var weekw = document.querySelector(".weekwind");
@@ -26,6 +27,7 @@ var pastdis=document.getElementById("pastgoeshere");
 
 // var icon= document.querySelector("");
 function geodets(Namecity){
+    var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${Namecity}&limit=5&appid=${key4api}`;
     fetch(geocode)
     .then(function(response){
         return response.json();
@@ -81,10 +83,11 @@ function pullWeather(lat,lon) {
             var windsped = Math.round(apidata.current.wind_speed * 10) / 10;
             console.log(ktof);
             
+            var uv = apidata.current.uvi;
             
 
-            showmainforecast(presentdate, ktof, humid, windsped, icon)
-
+            showmainforecast(presentdate, ktof, humid, windsped, icon, uv)
+            $(`.5day`).html(``);
             for (var i= 0; i < 5; i++) {
                 var weekutc = apidata.daily[i].dt;
                 var weekr = new Date(weekutc * 1000);
@@ -116,7 +119,7 @@ function showmainforecast(presentdate, ktof, humid, windsped, icon) {
     adddate.textContent = presentdate;
     iconspot.src = icon;
     stemp.textContent = Math.ceil(ktof) + `°F`;
-    wind.textContent = "Wind Speed:" + ` ` + windsped;
+    wind.textContent = "Wind Speed:" + ` ` + windsped + `mph`;
     shumidity.textContent ="Humidty:" +`    `+ humid;
 }
 
@@ -125,10 +128,10 @@ function showweekforecast(weekdatedata, weekicon, weekktof, weekwindsped, weekhu
     $(".5day").append(
         $(`
         <div class="daily">
-        <p>${weekdatedata}</p
+        <p>${weekdatedata}</p>
         <img src="${weekicon}" alt= "weather forcast icon">
         <p>${Math.ceil(weekktof)} °F</p>
-        <p>Wind Speed: ${weekwindsped}</p>
+        <p>Wind Speed: ${weekwindsped}mph </p>
         <p>Humidity: ${weekhumid}</p>`)
     );
 }
@@ -138,11 +141,13 @@ function lookup(city) {
     }
     if (localStorage.getItem("Namecity")=== null){
         localStorage.setItem("Namecity",`[]`);
+        
     }
     var historydata= JSON.parse(localStorage.getItem('Namecity'));
-   
+    historydata.push(city);
         localStorage.setItem(`Namecity`,JSON.stringify(historydata));
-        geodets(search);
+        geodets(city);
+        console.log(city);
 }
 
 function showpast() {
@@ -150,10 +155,10 @@ function showpast() {
     
         if (past) {
             for (var i = 0; i < past.length; i++) {
-        var pastbtn = document.createElement(button)
+        var pastbtn = document.createElement(`button`)
         pastdis.append(pastbtn);
-        pastbtn.setAttribute(`id`, `${Namecity[i]}`)
-        pastbtn.textContent= `${Namecity[i]}`;
+        pastbtn.setAttribute(`id`, `${past[i]}`)
+        pastbtn.textContent= `${past[i]}`;
         }
     }
     else{
@@ -165,7 +170,7 @@ searchbtn.addEventListener("click", function(event){
         return;
     }
     event.preventDefault();
-    var search = document.getElementById("mysearch");
+    var search = document.getElementById("search").value;
     lookup(search);
    showpast();
 })
