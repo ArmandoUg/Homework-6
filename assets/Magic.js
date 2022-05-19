@@ -28,7 +28,7 @@ var pastbtnn = document.getElementById(`historybtn`);
 
 // var icon= document.querySelector("");
 function geodets(Namecity) {
-    var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${Namecity}&limit=5&appid=${key4api}`;
+    var geocode = `https://api.openweathermap.org/geo/1.0/direct?q=${Namecity}&limit=5&appid=${key4api}`;
     fetch(geocode)
         .then(function (response) {
             return response.json();
