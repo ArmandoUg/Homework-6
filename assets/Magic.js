@@ -176,14 +176,25 @@ function showpast() {
         for (var i = 0; i < past.length; i++) {
             var pastbtn = document.createElement(`button`)
             pastdis.append(pastbtn);
-            pastbtn.setAttribute(`id`, `${past[i]} historybtn`);
-            pastbtn.setAttribute(`data-id`, `${past[i]}`);
-            pastbtn.setAttribute(`class`,`historybtn btn-primary btn-lg`);
-            pastbtn.textContent = `${past[i]}`;
-            
+            pastbtn.setAttribute(`id`, `${
+                past[i]
+            } historybtn`);
+            pastbtn.setAttribute(`data-id`, `${
+                past[i]
+            }`);
+            pastbtn.setAttribute(`class`, `historybtn btn-primary btn-lg`);
+            pastbtn.textContent = `${
+                past[i]
+            }`;
+
+            pastbtn.addEventListener("click", function (event) {
+                event.preventDefault();
+                pastsearch = event.target.getAttribute(`data-id`);
+                console.log('event is listening');
+                lookup(pastsearch);
+            })
         }
-    }
-    else {
+    } else {
         console.log(`No past searches found`);
     }
 }
@@ -197,14 +208,14 @@ searchbtn.addEventListener("click", function (event) {
     // showpast();
 })
 
-for (let k = 0; k < pastbtnn.length; k++) {
-    pastbtnn[k].addEventListener("click", function (event) {
-    event.preventDefault();
-    pastsearch = event.target.getAttribute(`data-id`);
-    lookup(pastsearch);
-    // showpast();
-})
-}
+// for (let k = 0; k < pastbtnn.length; k++) {
+//     pastbtnn[k].addEventListener("click", function (event) {
+//     event.preventDefault();
+//     pastsearch = event.target.getAttribute(`data-id`);
+//     lookup(pastsearch);
+//     // showpast();
+// })
+// }
 
 // geodets();
 // pullWeather();
