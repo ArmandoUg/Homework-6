@@ -28,7 +28,7 @@ var pastbtnn = document.getElementById(`historybtn`);
 
 // var icon= document.querySelector("");
 function geodets(Namecity) {
-    var geocode = `http://api.openweathermap.org/geo/1.0/direct?q=${Namecity}&limit=5&appid=${key4api}`;
+    var geocode = `https://api.openweathermap.org/geo/1.0/direct?q=${Namecity}&limit=5&appid=${key4api}`;
     fetch(geocode)
         .then(function (response) {
             return response.json();
@@ -60,15 +60,15 @@ function pullWeather(lat, lon) {
             var hours = date.getHours();
             var minutes = "0" + date.getMinutes();
             var formattedtime = hours + `:` + minutes;
+            
             if (hours > 6) {
-                document.getElementById("fcard").style.backgroundImage = "url('./images/Clear Sky.jpg')";
-                document.getElementById('fcard').style.color = `black`;
-            };
-            if (hours > 20, hours < 5) {
+                 document.getElementById("fcard").style.backgroundImage = "url('./images/Clear Sky.jpg')";
+                 document.getElementById('fcard').style.color = `black`;
+             };
+            if (hours > 19 || hours < 5) {
                 document.getElementById("fcard").style.backgroundImage = "url('./images/Night sky.jpg')";
                 document.getElementById('fcard').style.color = `white`;
             }; 
-           
 
             //  console.log(formattedtime);
             console.log(presentdate);
@@ -207,7 +207,6 @@ searchbtn.addEventListener("click", function (event) {
     lookup(search);
     // showpast();
 })
-
 
 
 // geodets();
