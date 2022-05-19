@@ -22,7 +22,7 @@ var weekdtemp = document.querySelector(".weektemp");
 var weekh = document.querySelector(".weekhumidity");
 var weekw = document.querySelector(".weekwind");
 var pastdis = document.getElementById("pastgoeshere");
-var pastbtnn = document.getElementById(`historybtn`) 
+var pastbtnn = document.getElementById(`historybtn`);
 // var encodecity= encodeURI(searchtxt);
 
 
@@ -121,6 +121,7 @@ function pullWeather(lat, lon) {
 }
 function showmainforecast(presentdate, ktof, humid, windsped, icon, uv) {
     adddate.textContent = presentdate;
+    document.getElementById("ricon").style.display ="block";
     iconspot.src = icon;
     stemp.textContent = Math.ceil(ktof) + `°F`;
     wind.textContent = "Wind Speed:" + ` ` + windsped + `mph`;
@@ -159,17 +160,15 @@ function lookup(city) {
     if (city === "") {
         return;
     }
-    if (localStorage.getItem("Namecity") === null) {
-        localStorage.setItem("Namecity", `[]`);
-
-    }
-    var historydata = JSON.parse(localStorage.getItem('Namecity'));
+   
+    var historydata = JSON.parse(localStorage.getItem('Namecity')) || [];
+    if(historydata.indexOf(city)== -1){
     historydata.push(city);
-    localStorage.setItem(`Namecity`, JSON.stringify(historydata));
+    localStorage.setItem(`Namecity`, JSON.stringify(historydata));}
     geodets(city);
     console.log(city);
 }
-
+showpast()
 function showpast() {
     var past = JSON.parse(localStorage.getItem(`Namecity`));
 
@@ -177,9 +176,11 @@ function showpast() {
         for (var i = 0; i < past.length; i++) {
             var pastbtn = document.createElement(`button`)
             pastdis.append(pastbtn);
-            pastbtn.setAttribute(`id`, `${past[i]}`)
-            pastbtn.setAttribute(`class`,`historybtn btn-primary btn-lg`)
+            pastbtn.setAttribute(`id`, `${past[i]} historybtn`);
+            pastbtn.setAttribute(`data-id`, `${past[i]}`);
+            pastbtn.setAttribute(`class`,`historybtn btn-primary btn-lg`);
             pastbtn.textContent = `${past[i]}`;
+            
         }
     }
     else {
@@ -191,20 +192,19 @@ searchbtn.addEventListener("click", function (event) {
         return;
     }
     event.preventDefault();
-    var search = document.getElementById("search").value;
+    var search = document.getElementById("search").value.toUpperCase();
     lookup(search);
-    showpast();
+    // showpast();
 })
 
-for(var k = 0; k < pastbtnn.length; k++) {
+for (let k = 0; k < pastbtnn.length; k++) {
     pastbtnn[k].addEventListener("click", function (event) {
     event.preventDefault();
-    var pastsearch = document.getElementById("search").value;
+    pastsearch = event.target.getAttribute(`data-id`);
     lookup(pastsearch);
-    showpast();
+    // showpast();
 })
 }
 
 // geodets();
 // pullWeather();
-// showpast()
