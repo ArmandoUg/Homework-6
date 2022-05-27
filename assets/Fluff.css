@@ -38,6 +38,7 @@ align-items: flex-start;
     display: flex;
     justify-content: center;
     margin-top:2%;
+    flex-wrap: wrap;
 }
 .btn-primary {
     color: #fff;

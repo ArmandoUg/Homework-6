@@ -60,15 +60,15 @@ function pullWeather(lat, lon) {
             var hours = date.getHours();
             var minutes = "0" + date.getMinutes();
             var formattedtime = hours + `:` + minutes;
-            
+
             if (hours > 6) {
-                 document.getElementById("fcard").style.backgroundImage = "url('./images/Clear Sky.jpg')";
-                 document.getElementById('fcard').style.color = `black`;
-             };
+                document.getElementById("fcard").style.backgroundImage = "url('./images/Clear Sky.jpg')";
+                document.getElementById('fcard').style.color = `black`;
+            };
             if (hours > 19 || hours < 5) {
                 document.getElementById("fcard").style.backgroundImage = "url('./images/Night sky.jpg')";
                 document.getElementById('fcard').style.color = `white`;
-            }; 
+            };
 
             //  console.log(formattedtime);
             console.log(presentdate);
@@ -121,25 +121,25 @@ function pullWeather(lat, lon) {
 }
 function showmainforecast(presentdate, ktof, humid, windsped, icon, uv) {
     adddate.textContent = presentdate;
-    document.getElementById("ricon").style.display ="block";
+    document.getElementById("ricon").style.display = "block";
     iconspot.src = icon;
     stemp.textContent = Math.ceil(ktof) + `°F`;
     wind.textContent = "Wind Speed:" + ` ` + windsped + `mph`;
     shumidity.textContent = "Humidty:" + `    ` + humid;
     myuv.textContent = "UV Index:" + ` ` + uv;
-     if (uv >10.9) {
+    if (uv > 10.9) {
         document.getElementById(`uvc`).style.color = `purple`;
     }
     if (uv < 11) {
-        document.getElementById(`uvc`).style.color =`red`;
+        document.getElementById(`uvc`).style.color = `red`;
     }
     if (uv < 7.9) {
         document.getElementById(`uvc`).style.color = `orange`;
     }
     if (uv < 5.9) {
-        document.getElementById(`uvc`).style.color =`yellow`;
+        document.getElementById(`uvc`).style.color = `yellow`;
     }
-     if (uv < 2.9) {
+    if (uv < 2.9) {
         document.getElementById(`uvc`).style.color = `green`;
     }
 }
@@ -160,11 +160,12 @@ function lookup(city) {
     if (city === "") {
         return;
     }
-   
+
     var historydata = JSON.parse(localStorage.getItem('Namecity')) || [];
-    if(historydata.indexOf(city)== -1){
-    historydata.push(city);
-    localStorage.setItem(`Namecity`, JSON.stringify(historydata));}
+    if (historydata.indexOf(city) == -1) {
+        historydata.push(city);
+        localStorage.setItem(`Namecity`, JSON.stringify(historydata));
+    }
     geodets(city);
     console.log(city);
 }
@@ -174,21 +175,18 @@ function showpast() {
 
     if (past) {
         for (var i = 0; i < past.length; i++) {
-            var pastbtn = document.createElement(`button`)
+            var pastbtn = document.createElement(`button`);
             pastdis.append(pastbtn);
-            pastbtn.setAttribute(`id`, `${
-                past[i]
-            } historybtn`);
-            pastbtn.setAttribute(`data-id`, `${
-                past[i]
-            }`);
+            pastbtn.setAttribute(`id`, `${past[i]
+                } historybtn`);
+            pastbtn.setAttribute(`data-id`, `${past[i]
+                }`);
             pastbtn.setAttribute(`class`, `historybtn btn-primary btn-lg`);
-            pastbtn.textContent = `${
-                past[i]
-            }`;
+            pastbtn.textContent = `${past[i]
+                }`;
 
             pastbtn.addEventListener("click", function (event) {
-                event.preventDefault();
+                // event.preventDefault();
                 pastsearch = event.target.getAttribute(`data-id`);
                 console.log('event is listening');
                 lookup(pastsearch);
@@ -205,7 +203,7 @@ searchbtn.addEventListener("click", function (event) {
     event.preventDefault();
     var search = document.getElementById("search").value.toUpperCase();
     lookup(search);
-    // showpast();
+    showpast();
 })
 
 
